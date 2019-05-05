@@ -1,0 +1,84 @@
+DROP TABLE LIKES;
+DROP TABLE REVIEWS;
+DROP TABLE USERS;
+DROP TABLE WINES;
+
+CREATE TABLE USERS (
+user_id VARCHAR(20) NOT NULL,
+password VARCHAR(20) NOT NULL,
+name VARCHAR (30),
+age INT,
+pref_color VARCHAR(10),
+CONSTRAINT users_pk PRIMARY KEY (user_id) );
+
+
+CREATE TABLE WINES (
+wine_id INT NOT NULL,
+country VARCHAR(50),
+description VARCHAR(512),
+designation VARCHAR (512),
+points INT,
+price DECIMAL(5, 2) UNSIGNED,
+province VARCHAR (100),
+region_1 VARCHAR(100),
+region_2 VARCHAR(100),
+taster_name VARCHAR(100),
+taster_twitter_handle VARCHAR(50),
+title VARCHAR(100),
+variety VARCHAR(100),
+winery VARCHAR(100), 
+CONSTRAINT wines_pk PRIMARY KEY (wine_id) );
+
+
+CREATE TABLE REVIEWS (
+review_id INT NOT NULL AUTO_INCREMENT,
+description VARCHAR(512),
+score INT,
+user_id VARCHAR(20) NOT NULL,
+wine_id INT NOT NULL, 
+CONSTRAINT reviews_pk PRIMARY KEY (review_id), 
+CONSTRAINT reviews_user_id_fk FOREIGN KEY (user_id) 
+REFERENCES USERS (user_id), 
+CONSTRAINT reviews_wine_id_fk FOREIGN KEY (wine_id) 
+REFERENCES WINES (wine_id) );
+
+
+CREATE TABLE LIKES (
+user_id VARCHAR(20) NOT NULL,
+wine_id INT NOT NULL,
+CONSTRAINT likes_pk PRIMARY KEY (user_id, wine_id), 
+CONSTRAINT likes_user_id_fk FOREIGN KEY (user_id)
+REFERENCES USERS (user_id), 
+CONSTRAINT likes_wine_id_fk FOREIGN KEY (wine_id) 
+REFERENCES WINES (wine_id) );
+
+LOAD DATA LOCAL INFILE '/home/pdey3/data.csv' 
+INTO TABLE WINES FIELDS
+TERMINATED BY "," OPTIONALLY ENCLOSED BY '"' 
+LINES TERMINATED BY "\n";
+
+CREATE TABLE WINES_2 (
+wine_id INT,
+country VARCHAR(50),
+description VARCHAR(512),
+designation VARCHAR (512),
+points INT,
+price DECIMAL(5, 2) UNSIGNED,
+province VARCHAR (100),
+region_1 VARCHAR(100),
+region_2 VARCHAR(100),
+taster_name VARCHAR(100),
+title VARCHAR(100),
+variety VARCHAR(100),
+winery VARCHAR(100) ); 
+
+
+LOAD DATA LOCAL INFILE '/home/pdey3/data.csv' 
+INTO TABLE WINES_2 FIELDS
+TERMINATED BY "," OPTIONALLY ENCLOSED BY '"'
+LINES TERMINATED BY "\n";
+
+DROP TABLE WINES_2;
+
+ALTER TABLE WINES 
+MODIFY wine_id INT NOT NULL AUTO_INCREMENT;
